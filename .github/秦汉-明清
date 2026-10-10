@@ -1049,7 +1049,7 @@
       "https://htdkyyggwsnsigrpclae.supabase.co";
 
     const SUPABASE_ANON_KEY =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0ZGt5eWdnd3Nuc2lncnBjbGFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE2MDY3NjAsImV4cCI6MjEwNzE4Mjc2MH0.rNKZjbdDTZjH-Oybn4hovabCzR3v7Ao19rkCSgskklo1";
+      "sb_publishable_Ui-qf5Rom0fohPJUzBOMug_Fe8f_Nrc";
 
     const BUCKET = "111";
 
