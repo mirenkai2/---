@@ -1249,7 +1249,6 @@
 </head>
 
 <body>
-  <main class="app">
     <div id="world" class="world"></div>
 
     <nav id="side-nav" class="side-nav" aria-label="展厅导航"></nav>
@@ -1359,6 +1358,7 @@
       id="ambient-audio"
       loop
       preload="none"
+      crossorigin="anonymous"
       src="https://cdn.pixabay.com/audio/2022/03/15/audio_731c6e0f4c.mp3">
     </audio>
   </main>
@@ -1715,9 +1715,25 @@
         button.title = hotspot.title || "局部说明";
 
         button.addEventListener("click", event => {
-          event.stopPropagation();
-          showDetail(media, hotspot);
-        });
+  event.preventDefault();
+  event.stopPropagation();
+
+  showDetail(media, hotspot);
+
+  button.classList.add("selected");
+
+  const hotspotSelector = viewerMode
+    ? ".viewer-hotspot"
+    : ".hotspot";
+
+  container
+    .querySelectorAll(hotspotSelector)
+    .forEach(otherButton => {
+      if (otherButton !== button) {
+        otherButton.classList.remove("selected");
+      }
+    });
+});
 
         container.appendChild(button);
       });
@@ -1757,18 +1773,42 @@
     }
 
     function showDetail(media, hotspot) {
-      detailPanel.classList.add("show");
+  const mediaTitle = media.title || "局部说明";
+  const hotspotTitle = hotspot.title || "未命名区域";
+  const hotspotText = hotspot.text || "暂无说明";
 
-      document.querySelector("#detail-label").textContent =
-        media.title || "局部说明";
+  /*
+   * 大图查看器打开时，更新大图右侧说明。
+   */
+  if (viewer.classList.contains("show")) {
+    const viewerDetail = document.querySelector("#viewer-detail");
+    const viewerLabel = viewerDetail.querySelector("small");
+    const viewerTitle = document.querySelector("#viewer-title");
+    const viewerText = document.querySelector("#viewer-text");
 
-      document.querySelector("#detail-title").textContent =
-        hotspot.title || "未命名区域";
+    viewerLabel.textContent = mediaTitle;
+    viewerTitle.textContent = hotspotTitle;
+    viewerText.textContent = hotspotText;
 
-      document.querySelector("#detail-text").textContent =
-        hotspot.text || "暂无说明";
-    }
+    viewerDetail.classList.add("has-hotspot");
 
+    return;
+  }
+
+  /*
+   * 普通展厅状态，更新底部说明面板。
+   */
+  document.querySelector("#detail-label").textContent =
+    mediaTitle;
+
+  document.querySelector("#detail-title").textContent =
+    hotspotTitle;
+
+  document.querySelector("#detail-text").textContent =
+    hotspotText;
+
+  detailPanel.classList.add("show");
+}
     function renderNavigation() {
       sideNav.innerHTML = "";
 
@@ -2045,6 +2085,9 @@
       document.querySelector("#viewer-text").textContent =
         media.description ||
         "点击图片上的金色热点查看局部说明。";
+        document
+  .querySelector("#viewer-detail")
+  .classList.remove("has-hotspot");
     }
 
     function showPreviousMedia() {
@@ -2778,13 +2821,14 @@
           .catch(() => {
             alert("浏览器阻止了自动播放，请再次点击环境音按钮。");
           });
+         
       } else {
         audio.pause();
         button.classList.remove("active");
         button.textContent = "♪ 环境音";
       }
     }
-
+    
     function clamp(value, min, max) {
       return Math.max(min, Math.min(max, value));
     }
@@ -2809,4 +2853,4 @@
     }
   </script>
 </body>
-</html>
+</html>它
